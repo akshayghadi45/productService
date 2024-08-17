@@ -14,14 +14,4 @@ public class Product {
     private String imageUrl;
     private Category category;
 
-    public ProductResponseDto fromProduct(){
-        ProductResponseDto productResponseDto = new ProductResponseDto();
-        productResponseDto.setId(this.id);
-        productResponseDto.setTitle(this.title);
-        productResponseDto.setDescription(this.description);
-        productResponseDto.setPrice(this.price);
-        productResponseDto.setImageUrl(this.imageUrl);
-        productResponseDto.setCategoryName(this.category.getName());
-        return productResponseDto;
-    }
 }

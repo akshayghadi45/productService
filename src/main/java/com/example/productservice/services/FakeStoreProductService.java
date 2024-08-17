@@ -1,11 +1,15 @@
 package com.example.productservice.services;
 
+import com.example.productservice.dtos.FakeStoreProductRequstDto;
 import com.example.productservice.dtos.FakeStoreProductResponseDto;
 import com.example.productservice.models.Product;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class FakeStoreProductService implements ProductService{
@@ -26,4 +30,37 @@ public class FakeStoreProductService implements ProductService{
 
         return responseDto.toProduct();
     }
+
+    @Override
+    public List<Product> getAllProducts() {
+        FakeStoreProductResponseDto[] responseDtos = restTemplate.getForObject(
+                "https://fakestoreapi.com/products",
+                FakeStoreProductResponseDto[].class
+        );
+
+        List<Product> products = new ArrayList<>();
+        for (FakeStoreProductResponseDto responseDto : responseDtos) {
+            products.add(responseDto.toProduct());
+        }
+
+        return products;
+    }
+
+    @Override
+    public Product addProduct(String title, String description, Double price, String image, String category) {
+        FakeStoreProductRequstDto fakeStoreProductRequstDto = new FakeStoreProductRequstDto();
+        fakeStoreProductRequstDto.setDescription(description);
+        fakeStoreProductRequstDto.setTitle(title);
+        fakeStoreProductRequstDto.setPrice(price);
+        fakeStoreProductRequstDto.setImage(image);
+        fakeStoreProductRequstDto.setCategory(category);
+       FakeStoreProductResponseDto fakeStoreProductResponseDto =restTemplate.postForObject(
+                "https://fakestoreapi.com/products",
+                fakeStoreProductRequstDto,
+               FakeStoreProductResponseDto.class
+
+        );
+        return fakeStoreProductResponseDto.toProduct();
+    }
+
 }

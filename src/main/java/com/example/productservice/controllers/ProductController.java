@@ -1,5 +1,6 @@
 package com.example.productservice.controllers;
 
+import com.example.productservice.dtos.ProductRequestDto;
 import com.example.productservice.dtos.ProductResponseDto;
 import com.example.productservice.models.Product;
 import com.example.productservice.services.FakeStoreProductService;
@@ -7,10 +8,10 @@ import com.example.productservice.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class ProductController {
@@ -32,7 +33,7 @@ public class ProductController {
 //        productResponseDto.setImageUrl("abc.com");
 
         Product product = productService.getProductById(id);
-        productResponseDto = product.fromProduct();
+        productResponseDto = productResponseDto.fromProduct(product);
 
         ResponseEntity<ProductResponseDto> responseEntity = new ResponseEntity<>(
                 productResponseDto, HttpStatusCode.valueOf(202)
@@ -40,7 +41,24 @@ public class ProductController {
         return  responseEntity;
     }
     @GetMapping("/product")
-    public String getAllProducts() {
-        return "All products";
+    public List<ProductResponseDto> getAllProducts() {
+        List<Product> products = productService.getAllProducts();
+        List<ProductResponseDto> productResponseDtos = new ArrayList<>();
+        for (Product product : products) {
+            ProductResponseDto productResponseDto = new ProductResponseDto();
+            productResponseDto=productResponseDto.fromProduct(product);
+            productResponseDtos.add(productResponseDto);
+        }
+        return productResponseDtos;
+    }
+    @PostMapping("/product")
+    public ProductResponseDto addProduct(@RequestBody ProductRequestDto productRequestDto) {
+        Product product = productService.addProduct(productRequestDto.getTitle(),
+                productRequestDto.getDescription(),productRequestDto.getPrice(),
+                productRequestDto.getImage(),productRequestDto.getCategory()
+        );
+
+        ProductResponseDto productResponseDto = new ProductResponseDto();
+        return productResponseDto.fromProduct(product);
     }
 }
