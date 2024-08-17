@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +62,26 @@ public class FakeStoreProductService implements ProductService{
 
         );
         return fakeStoreProductResponseDto.toProduct();
+    }
+
+    @Override
+    public List<Product> getProductsByLimit(Long limit) {
+        String url = UriComponentsBuilder
+                .fromUriString("https://fakestoreapi.com/products")
+                .queryParam("limit", limit)
+                .toUriString();
+
+        FakeStoreProductResponseDto[] responseDtos = restTemplate.getForObject(
+                url,
+                FakeStoreProductResponseDto[].class
+        );
+
+        List<Product> products = new ArrayList<>();
+        for (FakeStoreProductResponseDto responseDto : responseDtos) {
+            products.add(responseDto.toProduct());
+        }
+
+        return products;
     }
 
 }

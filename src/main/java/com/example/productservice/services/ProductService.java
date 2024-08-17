@@ -11,7 +11,7 @@ public interface ProductService {
 
     public List<Product> getAllProducts();
     public Product addProduct(String title, String description, Double price, String image, String category);
-
+    public List<Product> getProductsByLimit(Long id);
 }
 
 

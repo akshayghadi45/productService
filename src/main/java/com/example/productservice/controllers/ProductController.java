@@ -61,4 +61,16 @@ public class ProductController {
         ProductResponseDto productResponseDto = new ProductResponseDto();
         return productResponseDto.fromProduct(product);
     }
+
+    @GetMapping("/products")
+    public List<ProductResponseDto> getProductsByLimit(@RequestParam(value = "limit", required = false) Long limit) {
+        List<Product> products = productService.getProductsByLimit(limit);
+        List<ProductResponseDto> productResponseDtos = new ArrayList<>();
+        for (Product product : products) {
+            ProductResponseDto productResponseDto = new ProductResponseDto();
+            productResponseDto=productResponseDto.fromProduct(product);
+            productResponseDtos.add(productResponseDto);
+        }
+        return productResponseDtos;
+    }
 }
