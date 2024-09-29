@@ -1,5 +1,6 @@
 package com.example.productservice.controllers;
 
+import com.example.productservice.dtos.ErrorDto;
 import com.example.productservice.dtos.ProductRequestDto;
 import com.example.productservice.dtos.ProductResponseDto;
 import com.example.productservice.models.Product;
@@ -72,5 +73,14 @@ public class ProductController {
             productResponseDtos.add(productResponseDto);
         }
         return productResponseDtos;
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ErrorDto nullPointerExceptionHandler(){
+        ErrorDto errorDto =  new ErrorDto();
+
+        errorDto.setStatus("Failure");
+        errorDto.setMessage("Null Pointer Exception/Something went wrong");
+        return errorDto;
     }
 }

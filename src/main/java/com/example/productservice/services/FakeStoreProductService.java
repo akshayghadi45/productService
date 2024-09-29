@@ -21,11 +21,12 @@ public class FakeStoreProductService implements ProductService{
     public FakeStoreProductService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
+
     @Override
     public Product getProductById(Long id) {
 
         FakeStoreProductResponseDto responseDto= restTemplate.getForObject(
-                "http://fakestoreapi.com/products/" + id + "/",
+                "https://fakestoreapi.com/products/" + id + "/",
                 FakeStoreProductResponseDto.class
         );
 
